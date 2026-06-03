@@ -35,6 +35,13 @@ Intrinsic camera calibration was performed using OpenCV's chessboard calibration
 [0.02001483, 0.09007609, 0.00119459, 0.00396159, -0.57435930]
 ```
 
+### Reprojection Error
+
+The mean reprojection error obtained during calibration was **0.18 pixels**.
+
+A reprojection error below 0.5 pixels is generally considered excellent for camera calibration. This indicates that the estimated intrinsic parameters accurately model the camera geometry and lens distortion, making the calibration suitable for image undistortion and real-world measurement tasks.
+
+
 ### Image Undistortion
 
 All dataset images can be corrected using OpenCV's `cv2.undistort()` function with the estimated camera matrix and distortion coefficients.
