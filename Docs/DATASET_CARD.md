@@ -13,10 +13,10 @@ Readily available, rigid shape, circular geometry, easy segmentation and later m
   - multiple angles and distances
 
 ## Dataset Size
-- Total images: 103
-- Train: XX
-- Val: XX
-- Test: XX
+- Total images: 84
+- Train: 70%
+- Val: 20%
+- Test: 10%
 
 ## Annotation Tool
 Roboflow (exported in COCO format)

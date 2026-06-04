@@ -2,6 +2,7 @@
 
 Training was conducted for 10 epochs using Mask R-CNN (ResNet-50-FPN backbone).
 
+
 ### Key Metrics (Best Model)
 
 - mAP@0.5: 1.000

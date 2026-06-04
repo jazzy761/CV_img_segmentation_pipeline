@@ -54,7 +54,7 @@ The calibration reprojection error was computed from the detected chessboard cor
 
 # Dataset Card
 
-## Dataset Summary
+
 
 * Object Class: Coin
 * Annotation Type: Instance Segmentation
