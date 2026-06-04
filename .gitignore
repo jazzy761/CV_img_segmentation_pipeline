@@ -1,0 +1,8 @@
+.env
+
+# Model checkpoints
+*.pth
+*.pt
+checkpoints/
+weights/
+results/
