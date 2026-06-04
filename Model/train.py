@@ -14,9 +14,8 @@ from pycocotools.coco import COCO
 from pycocotools.cocoeval import COCOeval
 
 
-# -------------------------
-# Utils
-# -------------------------
+
+
 def collate_fn(batch):
     return tuple(zip(*batch))
 
@@ -39,9 +38,9 @@ def get_model(num_classes):
     return model
 
 
-# -------------------------
+
 # Training loop
-# -------------------------
+
 def train_one_epoch(model, loader, optimizer, device, scaler):
     model.train()
     total_loss = 0
@@ -65,9 +64,9 @@ def train_one_epoch(model, loader, optimizer, device, scaler):
     return total_loss / len(loader)
 
 
-# -------------------------
+
 # Evaluation (COCO mAP)
-# -------------------------
+
 def evaluate(model, loader, dataset, device):
     model.eval()
 
@@ -107,9 +106,7 @@ def evaluate(model, loader, dataset, device):
     return coco_eval.stats[0]  # mAP@0.5:0.95
 
 
-# -------------------------
-# Main
-# -------------------------
+
 def main(args):
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

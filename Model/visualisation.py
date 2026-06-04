@@ -10,9 +10,7 @@ from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 from torchvision.models.detection.mask_rcnn import MaskRCNNPredictor
 
 
-# ------------------------
 # Model
-# ------------------------
 
 def get_model(num_classes=2):
 
@@ -34,10 +32,6 @@ def get_model(num_classes=2):
     return model
 
 
-# ------------------------
-# Paths
-# ------------------------
-
 DEVICE = torch.device(
     "cuda" if torch.cuda.is_available() else "cpu"
 )
@@ -51,10 +45,8 @@ MODEL_PATH = os.path.join(
 os.makedirs("results", exist_ok=True)
 
 
-# ------------------------
-# Load model
-# ------------------------
 
+# Load model
 model = get_model()
 
 model.load_state_dict(
@@ -65,19 +57,16 @@ model.to(DEVICE)
 model.eval()
 
 
-# ------------------------
+
 # Dataset
-# ------------------------
+
 
 dataset = CoinDataset(TEST_DIR)
-
 print("Test Images:", len(dataset))
 
 
-# ------------------------
-# Predict & Save
-# ------------------------
 
+# Predict & Save
 for idx in range(min(10, len(dataset))):
 
     image_tensor, target = dataset[idx]
