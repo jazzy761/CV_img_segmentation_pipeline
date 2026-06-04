@@ -31,3 +31,7 @@ python -m Inference.infer --image "D:\Cv_img_segmentation_pipeline\Dataset\test\
 - you can choose any img from the dataset and replace its path 
 - Pixel-to-MM Conversion: This is integrated into the inference/infer.py and will run with inference using the above command
 
+
+- Finally test the app.py using : uvicorn API.app:app --reload 
+- This will output all metrics
+
