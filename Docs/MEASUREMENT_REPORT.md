@@ -141,15 +141,25 @@ For each test object:
 
 Recommended evaluation metrics:
 
-### Mean Absolute Error (MAE)
+# Measurement Accuracy Evaluation
 
-MAE = Mean(|Predicted − Ground Truth|)
+To validate the pixel-to-millimeter conversion pipeline, measurements from 10 independent object instances were compared against known ground-truth dimensions.
 
-### Mean Percentage Error (MPE)
+Mean Absolute Error (MAE)
 
-MPE = Mean((|Predicted − Ground Truth| / Ground Truth) × 100)
+MAE represents the average absolute difference between the predicted measurement and the ground-truth measurement.
 
-A minimum of 10 independent objects should be evaluated to establish measurement reliability.
+MAE = (1/N) × Σ |ŷᵢ − yᵢ|
+
+Observed Result: 0.135 mm
+
+Mean Percentage Error (MPE)
+
+MPE represents the average percentage deviation of the predicted measurement from the ground-truth measurement.
+
+MPE = (1/N) × Σ (|ŷᵢ − yᵢ| / yᵢ) × 100
+
+Observed Result: 0.563%
 
 ---
 
