@@ -8,7 +8,7 @@ from torchvision.models.detection import maskrcnn_resnet50_fpn
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 from torchvision.models.detection.mask_rcnn import MaskRCNNPredictor
 
-
+from Measurement.pixel_to_mm import estimate_object_size
 
 # Model
 
@@ -143,6 +143,11 @@ def main(image_path):
         x1, y1, x2, y2 = box.astype(int)
 
         mask = mask[0] > 0.5
+
+        size = estimate_object_size(mask)
+
+        print("Measurement:")
+        print(size)
 
         result[mask] = (
             result[mask] * 0.5 +

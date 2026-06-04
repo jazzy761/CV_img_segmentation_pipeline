@@ -12,6 +12,7 @@
 - conda env create -f environment.yml
 - this will create the conda env xai 
 - Activate conda environment : conda activate xai 
+- pip install fastapi uvicorn python-multipart install Fastapi for running a simple ui demo
 
 ### environment in vscode
 

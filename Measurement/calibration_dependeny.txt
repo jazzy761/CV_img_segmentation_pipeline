@@ -1,0 +1,12 @@
+Q Document why raw (distorted) images produce incorrect measurements. 
+
+
+Raw (distorted) images give wrong measurements because the camera lens bends the image, 
+so pixels don’t stay in a straight, equal scale. Due to radial distortion, straight lines 
+can look slightly curved (bulged in or out), and tangential distortion shifts parts of the 
+image unevenly because the lens is not perfectly aligned. Because of this, the scale is not 
+constant across the image — meaning the same number of pixels can represent different real-world 
+distances depending on where the object is in the frame. So if we directly convert pixels to mm, 
+the values become inconsistent and error increases, especially near the edges of the image. Using 
+undistortion fixes this by correcting the warped image using the camera calibration parameters, so 
+the geometry becomes more stable and measurement becomes reliable.
