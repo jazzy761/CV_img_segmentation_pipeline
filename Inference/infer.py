@@ -202,4 +202,7 @@ if __name__ == "__main__":
 
     main(args.image)
 
-# python -m Inference.infer --image "D:\Cv_img_segmentation_pipeline\Dataset\test\WhatsApp Image 2026-06-03 at 3-47-55 PM_jpeg.rf.FdPbK9yTDBb9j7bbYCic.jpeg"
+# cd D:\Cv_img_segmentation_pipeline
+# >> python -m Inference.infer --image "D:\Cv_img_segmentation_pipeline\Dataset\test\WhatsApp Image 2026-06-03 at 3-47-55 PM_jpeg.rf.FdPbK9yTDBb9j7bbYCic.jpeg"
+
+
