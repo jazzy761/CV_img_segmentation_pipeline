@@ -8,6 +8,12 @@ from torchvision.models.detection import maskrcnn_resnet50_fpn
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 from torchvision.models.detection.mask_rcnn import MaskRCNNPredictor
 
+from Measurement.pixel_to_mm import estimate_object_size
+
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 
 
 # Model
@@ -144,6 +150,12 @@ def main(image_path):
 
         mask = mask[0] > 0.5
 
+        #Pixel -> MM Plugin
+        size = estimate_object_size(mask)
+        print("Measurnment: ")
+        print(size)
+
+
         result[mask] = (
             result[mask] * 0.5 +
             np.array([0, 255, 0]) * 0.5
@@ -189,3 +201,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     main(args.image)
+
+# python -m Inference.infer --image "D:\Cv_img_segmentation_pipeline\Dataset\test\WhatsApp Image 2026-06-03 at 3-47-55 PM_jpeg.rf.FdPbK9yTDBb9j7bbYCic.jpeg"

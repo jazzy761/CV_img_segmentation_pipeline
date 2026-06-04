@@ -184,3 +184,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     main(args)
+
+
+#python Model/train.py --data Dataset --epochs 10 --batch_size 2 --lr 0.005
