@@ -1,27 +1,67 @@
-# Calibration Report
-
-## Object Selection
-
-**Target Object:** Pakistani 1 Rupee Coin
-
-The 1 Rupee coin was selected because it is easily available, has a well-defined circular shape, and is straightforward to annotate for image segmentation tasks. Its fixed dimensions make it suitable for later real-world measurement experiments.
-
----
-
 ## Camera Calibration
 
-### Method
+### Calibration Methodology
 
-Intrinsic camera calibration was performed using OpenCV's chessboard calibration approach. A set of 21 chessboard images was captured from different viewpoints and orientations. Corner points were detected using `cv2.findChessboardCorners()` and camera parameters were estimated using `cv2.calibrateCamera()`.
+Camera calibration was performed using OpenCV's standard chessboard-based intrinsic calibration procedure.
+
+A calibration target consisting of a **9 × 6 internal corner chessboard pattern** was captured from multiple viewpoints, orientations, and distances to provide sufficient geometric variation for parameter estimation.
+
+For each calibration image:
+
+1. The image was converted to grayscale.
+2. Chessboard corners were detected using `cv2.findChessboardCorners()`.
+3. Corresponding 3D world coordinates and 2D image coordinates were stored.
+4. Images with unsuccessful corner detection were discarded.
+
+A total of **21 calibration images** were collected, of which **20 images produced valid corner detections**.
+
+### Object and Image Points
+
+The calibration process requires correspondences between:
+
+* **3D object points** representing known chessboard corner locations in the real world.
+* **2D image points** representing detected chessboard corners in the image plane.
+
+The 3D object points were generated using a planar grid:
+
+```python
+objp = np.zeros((9 * 6, 3), np.float32)
+objp[:, :2] = np.mgrid[0:9, 0:6].T.reshape(-1, 2)
+```
+
+These points define the physical geometry of the calibration target.
+
+### Intrinsic Parameter Estimation
+
+Camera intrinsic parameters were estimated using OpenCV's `cv2.calibrateCamera()` function:
+
+```python
+ret, K, dist, rvecs, tvecs = cv2.calibrateCamera(
+    objpoints,
+    imgpoints,
+    img_size,
+    None,
+    None
+)
+```
+
+The calibration process estimates:
+
+* Camera focal lengths
+* Principal point coordinates
+* Radial lens distortion coefficients
+* Tangential lens distortion coefficients
+* Camera pose for each calibration image
 
 ### Calibration Images
 
-* Total calibration images captured: 21
-* Valid detections: 20
+| Metric                  | Value |
+| ----------------------- | ----- |
+| Total Images Captured   | 21    |
+| Valid Corner Detections | 20    |
+| Chessboard Pattern      | 9 × 6 |
 
-### Camera Parameters
-
-#### Camera Matrix
+### Camera Matrix
 
 ```text
 [[1232.18523,    0.00000, 798.70765],
@@ -29,74 +69,58 @@ Intrinsic camera calibration was performed using OpenCV's chessboard calibration
  [   0.00000,    0.00000,   1.00000]]
 ```
 
-#### Distortion Coefficients
+The camera matrix contains the intrinsic parameters of the imaging system, including focal length and principal point coordinates.
+
+### Distortion Coefficients
 
 ```text
 [0.02001483, 0.09007609, 0.00119459, 0.00396159, -0.57435930]
 ```
 
-### Reprojection Error
+These coefficients model radial and tangential lens distortion introduced by the camera optics.
 
-The mean reprojection error obtained during calibration was **0.18 pixels**.
+### Reprojection Error Analysis
 
-A reprojection error below 0.5 pixels is generally considered excellent for camera calibration. This indicates that the estimated intrinsic parameters accurately model the camera geometry and lens distortion, making the calibration suitable for image undistortion and real-world measurement tasks.
+Calibration quality was evaluated using reprojection error.
 
+For each calibration image:
 
-### Image Undistortion
+1. Known 3D chessboard points were projected back into the image plane using the estimated camera parameters.
+2. The projected locations were compared against the detected corner locations.
+3. The average Euclidean distance between these points was computed.
 
-All dataset images can be corrected using OpenCV's `cv2.undistort()` function with the estimated camera matrix and distortion coefficients.
+The resulting mean reprojection error was:
 
-### Reprojection Error
+**0.1899 pixels**
 
-The calibration reprojection error was computed from the detected chessboard corners and was found to be low enough for accurate image correction and measurement tasks.
+A reprojection error below 0.5 pixels is generally considered excellent and indicates that the estimated camera parameters accurately model the imaging geometry.
 
----
+### Calibration Validation
 
-# Dataset Card
+To validate the calibration results, image undistortion was performed using:
 
+```python
+cv2.getOptimalNewCameraMatrix()
+cv2.undistort()
+```
 
+The original image and corrected image were saved for visual inspection.
 
-* Object Class: Coin
-* Annotation Type: Instance Segmentation
-* Total Images: 84
-* Total Classes: 1
+The validation confirmed that lens distortion effects were successfully removed and that the calibration parameters were suitable for downstream segmentation and real-world measurement tasks.
 
-### Class Distribution
+### Calibration Outputs
 
-| Class | Count      |
-| ----- | ---------- |
-| Coin  | 84 Images |
+The following calibration artifacts were saved for later use in the measurement pipeline:
 
-### Image Variations
+| File              | Purpose                      |
+| ----------------- | ---------------------------- |
+| camera_matrix.npy | Intrinsic camera matrix      |
+| dist_coeffs.npy   | Lens distortion coefficients |
 
-The dataset contains:
+These calibration parameters are loaded during inference and measurement to ensure all dimensional estimates are computed from undistorted images.
 
-* Single coin images
-* Multiple coin images
-* Different backgrounds
-* Different viewing angles
-* Different lighting conditions
-* Different object positions and scales
+### Importance for Measurement
 
-### Dataset Split
+Accurate real-world measurement requires geometrically correct imagery.
 
-| Split      | Percentage |
-| ---------- | ---------- |
-| Train      | 70%        |
-| Validation | 20%        |
-| Test       | 10%        |
-
-Annotations were created using Roboflow and exported for segmentation model training.
-
----
-
-# Setup Guide
-
-1. Capture calibration images using a chessboard pattern.
-2. Estimate camera intrinsic parameters using OpenCV calibration.
-3. Undistort images using the computed camera matrix and distortion coefficients.
-4. Capture coin images using the calibrated camera.
-5. Annotate coin masks using Roboflow.
-6. Export the dataset in segmentation format.
-7. Train a segmentation model on the labelled dataset.
-8. Use segmented object masks and calibrated camera parameters for real-world measurement in millimetres.
+Lens distortion causes object dimensions to vary across the image plane, resulting in incorrect pixel measurements. Therefore, every image used in the measurement pipeline is first undistorted using the estimated intrinsic parameters before segmentation and pixel-to-millimetre conversion are performed.
